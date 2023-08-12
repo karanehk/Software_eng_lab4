@@ -1,7 +1,7 @@
 package semantic.symbol;
 
 import codeGenerator.Address;
-import codeGenerator.Memory;
+import codeGenerator.MemoryFacade;
 import codeGenerator.TypeAddress;
 import codeGenerator.varType;
 import errorHandler.ErrorHandler;
@@ -13,11 +13,11 @@ import java.util.Map;
 public class SymbolTable {
     private Map<String, Klass> klasses;
     private Map<String, Address> keyWords;
-    private Memory mem;
+    private MemoryFacade memoryFacade;
     private SymbolType lastType;
 
-    public SymbolTable(Memory memory) {
-        mem = memory;
+    public SymbolTable(MemoryFacade memoryFacade) {
+        this.memoryFacade = memoryFacade;
         klasses = new HashMap<>();
         keyWords = new HashMap<>();
         keyWords.put("true", new Address(1, varType.Bool, TypeAddress.Imidiate));
@@ -36,7 +36,7 @@ public class SymbolTable {
     }
 
     public void addField(String fieldName, String className) {
-        klasses.get(className).Fields.put(fieldName, new Symbol(lastType, mem.getDateAddress()));
+        klasses.get(className).Fields.put(fieldName, new Symbol(lastType, memoryFacade.getDateAddress()));
     }
 
     public void addMethod(String className, String methodName, int address) {
@@ -55,7 +55,7 @@ public class SymbolTable {
         if (klasses.get(className).Methodes.get(methodName).localVariable.containsKey(localVariableName)) {
             ErrorHandler.printError("This variable already defined");
         }
-        klasses.get(className).Methodes.get(methodName).localVariable.put(localVariableName, new Symbol(lastType, mem.getDateAddress()));
+        klasses.get(className).Methodes.get(methodName).localVariable.put(localVariableName, new Symbol(lastType, memoryFacade.getDateAddress()));
 //        }catch (NullPointerException e){
 //            e.printStackTrace();
 //        }
@@ -155,8 +155,8 @@ public class SymbolTable {
             this.codeAddress = codeAddress;
             this.returnType = returnType;
             this.orderdParameters = new ArrayList<>();
-            this.returnAddress = mem.getDateAddress();
-            this.callerAddress = mem.getDateAddress();
+            this.returnAddress = memoryFacade.getDateAddress();
+            this.callerAddress = memoryFacade.getDateAddress();
             this.parameters = new HashMap<>();
             this.localVariable = new HashMap<>();
         }
@@ -168,7 +168,7 @@ public class SymbolTable {
         }
 
         public void addParameter(String parameterName) {
-            parameters.put(parameterName, new Symbol(lastType, mem.getDateAddress()));
+            parameters.put(parameterName, new Symbol(lastType, memoryFacade.getDateAddress()));
             orderdParameters.add(parameterName);
         }
 

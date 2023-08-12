@@ -20,7 +20,7 @@ public class CodeGenerator {
     private SymbolTable symbolTable;
 
     public CodeGenerator() {
-        symbolTable = new SymbolTable(memory);
+        symbolTable = new SymbolTable(new MemoryFacade(memory));
         //TODO
     }
 
